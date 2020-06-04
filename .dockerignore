@@ -1,0 +1,7 @@
+*
+
+!static/	
+!nginx.conf
+!404.html
+!.eslintrc.js
+!package.json

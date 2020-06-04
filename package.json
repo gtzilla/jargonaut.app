@@ -1,0 +1,28 @@
+{
+  "name": "jargonaut.app",
+  "version": "1.0.1",
+  "main": "404.html",
+  "repository": "git@github.com:gtzilla/acronym-game.js.git",
+  "author": "gtzilla <gregory.tomlinson@gmail.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "commander": "^5.0.0",
+    "moment": "^2.24.0",
+    "navigo": "^7.1.2",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "stylelint": "^13.3.0",
+    "stylelint-config-standard": "^20.0.0",
+    "underscore": "^1.9.2",
+    "eslint": "^6.8.0",
+    "eslint-config-semistandard": "^15.0.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "semistandard": "^14.2.0"    
+  }
+}

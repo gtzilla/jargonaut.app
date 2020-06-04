@@ -1,0 +1,16 @@
+{
+	"short_name": "Jargonaut",
+	"name": "Jargonaut.app",
+	"start_url": "/",
+	"background_color":"#FFFFFF",
+	"display": "standalone",
+	"lang":"en",
+	"description":"Turning letter soup into bite-sized knowledge",
+	"scope":"/",
+	"icons": [
+	  {
+	    "src": "/static/graphics/tag-ios-icon.png",
+	    "type": "image/png",
+	    "sizes": "192x192"
+	  }]
+}
