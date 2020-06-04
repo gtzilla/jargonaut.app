@@ -1,7 +1,8 @@
 'use strict';
 
-import { deriveAcronymFromPhrase } from './game-letters-component.js';
-import { SuccessListComponent } from './success-list-component.js';
+import { deriveAcronymFromPhrase } from './hintable-input-component.js';
+import { GlossaryListComponent, unsolvedPhrases } from './glossary-list-component.js';
+import { UserPreferencesComponent } from './user-preferences-component.js';
 import { StructureComponent } from './structure-component.js';
 import { ThinStorage } from './thin-storage.js';
 import { PhraseModel } from '../phrases/phrase-model.js';
@@ -17,28 +18,32 @@ function Letter (char, displayed = true) {
     displayed
   };
 }
-export class GameSuggestionComponent extends React.Component {
+export class AddJargonComponent extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
       count: 0,
       letters: [],
+      appendToStarter: thinStore.get('append_to_starter_v1') || false,
       suggestedPhrase: props.suggestedPhrase || null,
       alt: null,
       type: 'pure',
       removedPositions: [],
-      phrases: thinStore.get('custom_dict_v1') || []
+      phrases: props.phrases || thinStore.get('custom_dict_v1') || []
     };
   }
 
   static get propTypes () {
     return {
+      solved: () => {},
+      phrases: () => {},
       actionText: () => {},
       onKeyUp: () => {},
       inputPlaceholder: () => {},
       suggestedPhrase: () => {},
       onSuggestAndEmail: () => {},
-      onSubmit: () => {}
+      onSubmit: () => {},
+      onLibraryAdded: () => {}
     };
   }
 
@@ -61,7 +66,6 @@ export class GameSuggestionComponent extends React.Component {
   }
 
   componentDidCatch (error, errorInfo) {
-    // You can also log the error to an error reporting service
     console.error('error', error, errorInfo);
   }
 
@@ -111,33 +115,25 @@ export class GameSuggestionComponent extends React.Component {
     }
   }
 
-  /**
-    Generic use case
-  */
   async handleSubmit (e, phrase = null, acronym = null) {
-    console.log('handleSubmit', e);
     e.preventDefault();
     const suggestedPhrase = this.input.value || null;
 
     this.setState({
       suggestedPhrase
     }, () => {
-      const alt = acronym || null;
-      const phrase = new PhraseModel(suggestedPhrase, alt);
+      const phrase = new PhraseModel(suggestedPhrase, acronym);
       const found = this.state.phrases.find(item => {
         return item.phrase === suggestedPhrase && suggestedPhrase.length;
       });
       if (!found) {
         this.state.phrases.push(phrase);
-        console.log('original', phrase);
-
         this.setState({
           count: this.state.count + 1
         }, () => {
           thinStore.set('custom_dict_v1', this.state.phrases);
           this.resetState();
         });
-        // such an add spot for this.
         thinStore.del('won_v1');
       }
     });
@@ -193,55 +189,101 @@ export class GameSuggestionComponent extends React.Component {
     }
 
     return (
-      el(StructureComponent, {},
-        el('div', {
-          className: 'game-letters-suggestion-box'
-        },
-        el('div', {
-          className: 'acronym-defintion-header-box'
-        },
-        el('div', {
-          className: 'game-editable-acronym-box'
-        }, ...letterEls),
-        el('h2', {}, 'ac\u00B7ro\u00B7nym'),
-        el('h3', {}, '/\u02C8akr\u0259\u02CCnim/'),
-        el('h4', {}, 'noun'),
-        el('p', {}, 'an ',
-          el('span', {
-            className: 'game-suggestion-abbreviation-teaser'
-          }, 'abbreviation'),
-          ' formed from the initial letters of other words and pronounced as a word (e.g. ASCII, NASA ).',
-          ' Decode Jargon by adding to the glossary')),
-        el('form', {
-          onSubmit: this.onSubmitWrapper.bind(this),
-          method: 'GET',
-          action: '#'
-        },
-        el('input', {
-          onKeyUp: this.handleKeyUp.bind(this),
-          ref: el => { this.input = el; },
-          value: this.state.suggestedPhrase || '',
-          type: 'text',
-          name: 'suggest',
-          onChange: this.handleChange.bind(this),
-          placeholder: this.props.inputPlaceholder
-        }),
-        el('button', { type: 'submit' }, this.props.actionText))),
-        el(SuccessListComponent, {
-
-          solved: new Set(this.state.phrases || []),
-          onReset: () => {
-            console.log('Reseting user custom dictionary', this.state.phrases);
-            thinStore.del('custom_dict_v1');
+      el(React.Fragment, {},
+        el(UserPreferencesComponent, {
+          appendToStarter: this.state.appendToStarter,
+          onChange: (e, isNSFW) => {
+            const unsolved = unsolvedPhrases(isNSFW);
             this.setState({
-              phrases: [],
-              counter: 0
-            }, () => {
-
+              unsolved
             });
-            document.location.reload();
+          },
+          onAppendToggleChange: (isAppendToStarter) => {
+            this.setState({
+              appendToStarter: isAppendToStarter
+            });
+            // warn: hardcoded nsfw flag here.
+            const unsolved = unsolvedPhrases(false);
+            this.setState({
+              unsolved
+            });
+
+            thinStore.del('nextUp_v1');
+            thinStore.set('append_to_starter_v1', isAppendToStarter);
+          },
+          onLibraryAdded: (rawLibraryUrl) => {
+            thinStore.del('nextUp_v1');
+            thinStore.del('skipped_v1');
+            this.resetState();
+            this.props.onLibraryAdded(rawLibraryUrl);
           }
-        })
+        }),
+        el(StructureComponent, {},
+          el('div', {
+            className: 'game-letters-suggestion-box'
+          },
+          el('div', {
+            className: 'acronym-defintion-header-box'
+          },
+          el('div', {
+            className: 'game-editable-acronym-box'
+          }, ...letterEls),
+          el('h2', {}, 'ac\u00B7ro\u00B7nym'),
+          el('h3', {}, '/\u02C8akr\u0259\u02CCnim/'),
+          el('h4', {}, 'noun'),
+          el('p', {}, 'an ',
+            el('span', {
+              className: 'game-suggestion-abbreviation-teaser'
+            }, 'abbreviation'),
+            ' formed from the initial letters of other words and pronounced as a word (e.g. ASCII, NASA ).',
+            ' Build your own Jargon')),
+          el('form', {
+            onSubmit: this.onSubmitWrapper.bind(this),
+            method: 'GET',
+            action: '#'
+          },
+          el('input', {
+            onKeyUp: this.handleKeyUp.bind(this),
+            ref: el => { this.input = el; },
+            value: this.state.suggestedPhrase || '',
+            type: 'text',
+            name: 'suggest',
+            onChange: this.handleChange.bind(this),
+            placeholder: this.props.inputPlaceholder
+          }),
+          el('button', { type: 'submit' }, this.props.actionText))),
+          el(GlossaryListComponent, {
+            solved: new Set(this.state.phrases || []),
+            unsolved: unsolvedPhrases(false),
+            noSpoilers: true,
+            onRemoveClick: (e, data) => {
+              console.log('got data into add jargon.js', data);
+              const exists = thinStore.get('custom_dict_v1') || [];
+              const found = exists.findIndex(item => {
+                return item.phrase === data.phrase;
+              });
+              if (found > -1) {
+                exists.splice(found, 1);
+                this.setState({
+                  phrases: exists
+                }, () => {
+                  thinStore.set('custom_dict_v1', exists);
+                });
+              }
+            },
+            onReset: () => {
+              console.log('Reseting user custom dictionary', this.state.phrases);
+              thinStore.del('custom_dict_v1');
+              thinStore.del('custom_dict_urls_v1');
+              this.setState({
+                phrases: [],
+                counter: 0
+              }, () => {
+
+              });
+              document.location.reload();
+            }
+          }))
       )
     );
   }

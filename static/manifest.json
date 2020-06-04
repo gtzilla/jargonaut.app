@@ -7,8 +7,7 @@
 	"lang":"en",
 	"description":"Turning letter soup into bite-sized knowledge",
 	"scope":"/",
-	"icons": [
-	  {
+	"icons": [{
 	    "src": "/static/graphics/tag-ios-icon.png",
 	    "type": "image/png",
 	    "sizes": "192x192"

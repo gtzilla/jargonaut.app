@@ -2,6 +2,6 @@
 
 !static/	
 !nginx.conf
-!404.html
+!index.html
 !.eslintrc.js
 !package.json

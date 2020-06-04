@@ -8,167 +8,121 @@ const Ratings = [
 const ComprehensivePhraseCollection = [{
   phrase: 'Laughing my ass off',
   rating: 'ma',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Thank you so much',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'National Hockey League',
   rating: 'g',
   type: 'pure',
-  category: 'organization',
-  company: 'the-acronym-game'
+  category: 'organization'
 }, {
   phrase: 'As far as I know',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Paid time off',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Shut the Fuck up',
   rating: 'ma',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Get the Fuck out',
   rating: 'ma',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Kiss my ass',
   rating: 'ma',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'National Aeronautics and Space Administration',
   rating: 'g',
   alt: 'NASA',
   type: 'alt',
-  category: 'organization',
-  company: 'the-acronym-game'
+  category: 'organization'
 }, {
   phrase: 'Food and Drug Administration',
   alt: 'FDA',
   rating: 'g',
   type: 'alt',
-  category: 'organization',
-  company: 'the-acronym-game'
+  category: 'organization'
 }, {
   phrase: 'Out of the Office',
   type: 'pure',
-  rating: 'g',
-  category: 'general',
-  company: 'the-acronym-game'
+  rating: 'g'
 }, {
   phrase: 'Minimum Viable Product',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Your mileage may vary',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Away from Keyboard',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
+}, {
+  phrase: 'Black Lives Matter',
+  rating: 'g',
+  type: 'pure'
 }, {
   phrase: 'Driving While Black',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Not Safe for Work',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Do what you think is right',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'For what it\'s worth',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Request for Comment',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'For your information',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Laugh Out Loud',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Do it yourself',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'If I recall correctly',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'In real life',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'Rolling on Floor Laughing',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }, {
   phrase: 'I am not a lawyer',
   rating: 'g',
   type: 'pure',
-  category: 'disclaimer',
-  company: 'the-acronym-game'
+  category: 'disclaimer'
 }, {
   phrase: 'Video on Demand',
   rating: 'g',
-  type: 'pure',
-  category: 'general',
-  company: 'the-acronym-game'
+  type: 'pure'
 }];
 
 export {

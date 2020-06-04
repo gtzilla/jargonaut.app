@@ -1,15 +1,19 @@
 'use strict';
 
-import { FooterComponent } from './footer-component.js';
+/**
+  Header + Footer UI Wrap
+
+  Allows page contents as props.children
+*/
+import { TopNavigationComponent } from './top-navigation-component.js';
 const el = React.createElement.bind(React);
 export function StructureComponent (props) {
-  const href = '/';
-
   return (
     el(React.Fragment, {},
       el('div', {
         className: 'container'
       },
+      el(TopNavigationComponent, { host: '/' }),
       el('h1', {},
         el('a', {
           title: 'Jargonaut',
@@ -22,6 +26,5 @@ export function StructureComponent (props) {
           className: 'header-remaining-count-tag-teaser'
         }, props.remaining)),
       el('p', {}, 'Enterprise vernacular training game and glossary'),
-      props.children),
-      el(FooterComponent, { host: href })));
+      props.children)));
 }

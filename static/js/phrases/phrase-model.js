@@ -1,12 +1,31 @@
 'use strict';
 
-export function PhraseModel (phrase, alt = null, collection = 'general', rating = 'g') {
-  const type = alt || 'pure';
+import { deriveAcronymFromPhrase } from '../web-lib/game-letters-component.js';
+export function PhraseModel (phrase, acronym, rating = 'g') {
+  const derived = deriveAcronymFromPhrase(phrase);
+  let type = 'pure';
+  let alt = null;
+  if (acronym && derived.toLowerCase() !== acronym.toLowerCase()) {
+    type = 'alt';
+    alt = acronym;
+  }
   return {
     phrase,
     rating,
     alt,
-    type,
-    collection
+    type
   };
 }
+
+PhraseModel.validate = (obj) => {
+  const model = new PhraseModel(obj.phrase, obj.alt);
+  return (
+    model.phrase === obj.phrase &&
+    model.alt === obj.alt &&
+    model.type === obj.type);
+};
+
+// assumes already validated.
+PhraseModel.restrictedProperties = obj => {
+  return new PhraseModel(obj.phrase, obj.alt, obj.rating);
+};

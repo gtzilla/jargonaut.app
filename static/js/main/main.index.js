@@ -1,22 +1,21 @@
 'use strict';
 
 import Navigo from '../../../node-static/navigo/lib/navigo.es.js';
-import { GameSuggestionComponent } from '../web-lib/game-suggestion-component.js';
-import { ComprehensivePhraseCollection } from '../phrases/phrases-list.js';
-import { GameWonComponent } from '../web-lib/game-won-component.js';
+import { AddJargonComponent } from '../web-lib/add-jargon-component.js';
+import { GlossaryPageComponent } from '../web-lib/glossary-page-component.js';
 import { ThinStorage } from '../web-lib/thin-storage.js';
-import { TitleAnimatorPreloaderHOCComponent } from '../web-lib/title-animator-preloader-hoc-component.js';
-
+import { PrivacyPolicyComponent } from '../web-lib/privacy-policy-component.js';
+import { UserPreferencesComponent } from '../web-lib/user-preferences-component.js';
+import { StructureComponent } from '../web-lib/structure-component.js';
+import { ExportJargonComponent } from '../web-lib/export-jargon-component.js';
+// import { UnknownJargonComponent } from '../web-lib/unknown-jargon-component.js';
 import {
   GamePlayComponent,
-  resetStoredInfo,
-  pickCorrectAcronym
+  getShuffledCollection,
+  resetStoredInfo
 } from '../web-lib/game-play-component.js';
+
 const thinStore = new ThinStorage();
-const COLLECTION = (function () {
-  const userPhrases = thinStore.get('custom_dict_v1') || [];
-  return _.shuffle(ComprehensivePhraseCollection.concat(userPhrases));
-})();
 const el = React.createElement.bind(React);
 const router = new Navigo(document.location.origin);
 
@@ -25,36 +24,33 @@ function userReset (e) {
   resetStoredInfo();
 }
 
-function prunePreviouslyCorrectFromPhrases (solved, fullAcronymPhrasesList) {
-  const copyData = (fullAcronymPhrasesList || []).slice(0);
-  solved.forEach(exist => {
-    const idx = _.findIndex(copyData, (item) => {
-      return item.phrase === exist.phrase;
-    });
-    if (idx > -1) {
-      copyData.splice(idx, 1);
-    }
-  });
-  const phrases = new Set(_.pluck(copyData, 'phrase'));
-  return Array.from(phrases).map(phrase => {
-    return _.find(copyData, item => {
-      return item.phrase === phrase;
-    });
-  });
-}
-
 async function loadPhraseOrNavigateToWon (done, params) {
   if (thinStore.get('won_v1')) {
-    document.location.assign('/add-jargon');
+    document.location.assign('/edit-jargon');
     done(false);
   }
   done(true);
 }
 
 function addMoreJargonView () {
+  const existing = thinStore.get('custom_dict_v1') || [];
   ReactDOM.render(
-    el(GameSuggestionComponent, {
+    el(AddJargonComponent, {
       actionText: 'Add',
+      onLibraryAdded: (gistLibraryUrl) => {
+        if (!gistLibraryUrl) {
+          // came via URL, not gist
+          /**
+            First time user
+            1. Take directly to the game or leave on add-jargon?
+
+            If user had existing dictionary, before add,
+            leave on page
+          */
+          const routeTo = existing.length ? document.location.pathname : '/';
+          router.navigate(routeTo);
+        }
+      },
       inputPlaceholder: 'Jargon phrase',
       onSubmit: () => {},
       onSuggestAndEmail: () => {
@@ -65,49 +61,78 @@ function addMoreJargonView () {
   );
 }
 
-function allSolvedView () {
-  // meh, cheesy
-  const solved = thinStore.get('correct_v1') || [];
+function glossaryListPage () {
   ReactDOM.render(
-
-    el(GameWonComponent, {
+    el(GlossaryPageComponent, {
       handleReset: (e) => {
         userReset(e);
         document.location.reload();
-      },
-      solved
+      }
+
     }),
     document.getElementById('container-v2')
   );
 }
 
-function jargonautDisplayPage (jargonType = null, acronym = null) {
-  const phraseCollection = COLLECTION;
-  // that's kinda weird
-  let phrase;
-  if (acronym) {
-    phrase = phraseCollection.find(item => {
-      if (pickCorrectAcronym(item) === acronym) {
-        return true;
-      }
-    });
-  }
-  const solved = thinStore.get('correct_v1') || [];
-  solved.sort();
-  const unsolved = prunePreviouslyCorrectFromPhrases(solved, phraseCollection);
+function privacyPolicyDisplayPage () {
   ReactDOM.render(
-    el(TitleAnimatorPreloaderHOCComponent, {},
-      el(GamePlayComponent, {
-        onAcronymClick: () => {
-          console.log('an acronym in the success list was clicked');
-        },
-        jargonType,
-        phrase,
-        solved: thinStore.get('correct_v1') || [],
-        unsolved,
-        onNavigate: router.navigate.bind(router)
-      })),
+    el(React.Fragment, {},
+      el(StructureComponent, {},
+        el(PrivacyPolicyComponent, {}))),
+    document.getElementById('container-v2')
+  );
+}
+
+function jargonautDisplayPage (params) {
+  const { acronym, jargonType } = params;
+  ReactDOM.render(
+    el(GamePlayComponent, {
+      onAcronymClick: () => {
+        console.log('an acronym in the success list was clicked');
+      },
+      jargonType,
+      acronym,
+      onNavigate: router.navigate.bind(router)
+    }),
     document.getElementById('container-v2'));
+}
+
+export function ExportLibraryDisplayComponent (props) {
+  const isAppendToStarter = thinStore.get('append_to_starter_v1') || false;
+  const _phraseCollection = getShuffledCollection(isAppendToStarter);
+  const [phrases, setPhrases] = React.useState(_phraseCollection);
+  const [appendToStarter, setAppendToStarter] = React.useState(isAppendToStarter);
+  return (
+    el(React.Fragment, {},
+      el(UserPreferencesComponent, {
+        appendToStarter,
+        onChange: () => {},
+        onLibraryAdded: () => {
+          thinStore.del('nextUp_v1');
+          thinStore.del('skipped_v1');
+        },
+        onAppendToggleChange: (isAppendToStarter) => {
+          const phraseCollection = getShuffledCollection(isAppendToStarter);
+          setAppendToStarter(isAppendToStarter);
+          setPhrases(phraseCollection);
+          thinStore.del('nextUp_v1');
+          thinStore.set('append_to_starter_v1', isAppendToStarter);
+        }
+      }),
+      el(StructureComponent, {},
+        el(ExportJargonComponent, {
+          itemsLength: phrases.length,
+          appendToStarter,
+          exportData: phrases
+        })))
+  );
+}
+
+function exportJargonDisplayPage () {
+  ReactDOM.render(
+    el(ExportLibraryDisplayComponent, {}),
+    document.getElementById('container-v2')
+  );
 }
 
 /**
@@ -115,12 +140,9 @@ function jargonautDisplayPage (jargonType = null, acronym = null) {
 */
 router
   .notFound(addMoreJargonView)
-  .on('/solved', allSolvedView, {
-    before: (done, params) => {
-      console.log('Previously solved.');
-      done();
-    }
-  })
+  .on('/privacy-policy', privacyPolicyDisplayPage, {})
+  .on('/export-jargon', exportJargonDisplayPage, {})
+  .on('/glossary', glossaryListPage, {})
   .on('/acronym/:acronym', jargonautDisplayPage, {
     before: loadPhraseOrNavigateToWon
   })

@@ -1,33 +1,18 @@
 'use strict';
 
+/**
+  Manage the events and UI for typing letters.
+
+    1. checks keyboard, focus and submit events
+    for new letters.
+    2. determines correctness of typed user entry.
+*/
+import {
+  HintableInputComponent,
+  deriveAcronymFromPhrase
+} from './hintable-input-component.js';
+
 const el = React.createElement.bind(React);
-function capitalizer (typed) {
-  return typed
-    .replace(/^([a-z])$/, (matches, m1) => {
-      return m1.toUpperCase();
-    })
-    .replace(/\s([a-z])$/, (matches, m1, m2) => {
-      return ' ' + m1.toUpperCase();
-    });
-}
-
-function hasModifier (e) {
-  return e.metaKey || e.altKey || e.shiftKey || e.ctrlKey;
-}
-
-function deriveAcronymFromPhrase (item) {
-  return item && item.split(' ').map(word => {
-    return word.substring(0, 1).toUpperCase();
-  }).join('');
-}
-
-function nsfwFilter (isNSFW, array) {
-  // always start from props.Allphrases
-  return array.filter((item, idx, all) => {
-    if (!isNSFW && item.rating !== 'g') return false;
-    return true;
-  });
-}
 
 class GameLettersComponent extends React.Component {
   constructor (props) {
@@ -38,7 +23,6 @@ class GameLettersComponent extends React.Component {
     if (!props.phrase) {
       throw new Error('activePhrase property must be object');
     }
-    // remainingCountElement
     const activePhrase = this.props.phrase;
     const pos = _.findIndex(this.props.allPhrases, item => {
       return item.phrase === activePhrase.phrase;
@@ -74,7 +58,7 @@ class GameLettersComponent extends React.Component {
   }
 
   componentDidMount () {
-    this.activeElement.focus();
+    this.hintableInputInstance.focus();
     if (this.props.onMounted) {
       this.props.onMounted(this.props.phrase, this.dynamicAcronym);
     }
@@ -85,6 +69,9 @@ class GameLettersComponent extends React.Component {
       in iOS, unless changed. Single straight quotes
       are curly quotes, which causes exact string match
       to fail.
+
+      this is broken again on ios when deplyed via github
+      6/7/2020
     */
     const correctPhrase = this.props.phrase.phrase.replace(/’/g, '\'').toLowerCase();
     if (phrase.toLowerCase() === correctPhrase) {
@@ -92,93 +79,11 @@ class GameLettersComponent extends React.Component {
     }
   }
 
-  matchScrollPosition () {
-    if (this.activeElement) { this.disabledElement.scrollLeft = this.activeElement.scrollLeft; }
-  }
-
-  handleChange (e) {
-    let typed = e.currentTarget.value;
-    typed = typed.replace(/\s{2,}/g, ' ');
-    const splitted = typed.trim().split(' ');
-    typed = capitalizer(typed);
-    this.setState({
-      spaces: splitted.length,
-      scrollLeft: e.currentTarget.scrollLeft
-    });
-    if (typed.length === 0) {
-      this.setState({
-        userTyped: typed,
-        spaces: 0
-      });
-      e.currentTarget.blur();
-      e.currentTarget.focus();
-    } else {
-      this.setState({
-        userTyped: typed
-      });
-    }
-    this.disabledElement.scrollLeft = e.currentTarget.scrollLeft;
-  }
-
-  setNSFW (isNSFW) {
-    this.setState({
-      isNSFW
-    });
-  }
-
-  handleKeyUp (e) {
-    this.matchScrollPosition();
-  }
-
-  handleKeyPress (e) {
-    setTimeout(() => {
-      this.matchScrollPosition();
-    }, 5);
-  }
-
-  handleKeyDown (e) {
-    if (e.keyCode === 9) {
-      e.preventDefault();
-    }
-    if (!hasModifier(e) && (e.keyCode === 39 || e.keyCode === 9)) {
-      const acronym = this.dynamicAcronym;
-      let typed = e.currentTarget.value;
-      const splitted = typed.trim().split(' ');
-      let spaces = splitted.length;
-      if (!typed) {
-        typed = acronym.substring(splitted.length - 1, splitted.length);
-      } else {
-        if (!typed.endsWith(' ')) {
-          typed += ' ';
-        }
-        typed += acronym.substring(splitted.length, splitted.length + 1);
-        spaces += 1;
-      }
-      this.setState({
-        userTyped: typed,
-        shakebox: false,
-        spaces
-      });
-      this.matchScrollPosition();
-    }
-  }
-
-  handleBlur (e) {
-    this.disabledElement.scrollLeft = 0;
-  }
-
-  handleFocus (e) {
-    const el = e.currentTarget;
-    if (!this.props.phrase) return;
-    el.selectionStart = el.selectionEnd = el.value.length;
-  }
-
   get dynamicAcronym () {
     return this.props.phrase.alt ? this.props.phrase.alt : deriveAcronymFromPhrase(this.props.phrase.phrase);
   }
 
   componentDidUpdate () {
-    this.disabledElement.scrollLeft = this.state.scrollLeft;
     if (this.props.onUpdated) {
       this.props.onUpdated(this.props.phrase, this.dynamicAcronym);
     }
@@ -187,7 +92,7 @@ class GameLettersComponent extends React.Component {
   handleSubmit (e) {
     e.preventDefault();
     const currentlyActive = this.props.phrase;
-    const testedPhrase = this.activeElement.value.trim();
+    const testedPhrase = this.hintableInputInstance.value.trim();
     const isValid = this.validateTypedPhraseCorrect(testedPhrase);
     if (isValid) {
       this.props.onAnswerCorrect(currentlyActive);
@@ -197,13 +102,21 @@ class GameLettersComponent extends React.Component {
         userTyped: '',
         spaces: 0
       });
-      this.activeElement.focus();
+      this.hintableInputInstance.focus();
+      this.hintableInputInstance.reset();
     } else {
       let useTint = this.state.submitTint;
       useTint += 30;
       this.setState({
         submitTint: useTint,
         shakebox: true
+      }, () => {
+        // inelegant
+        setTimeout(() => {
+          this.setState({
+            shakebox: false
+          });
+        }, 1500);
       });
       if (this.props.onAnswerWrong) {
         this.props.onAnswerWrong(currentlyActive);
@@ -219,7 +132,7 @@ class GameLettersComponent extends React.Component {
   handleSkipClicked (e) {
     e.preventDefault();
     if (!this.props.allPhrases.length) {
-      this.activeElement.focus();
+      this.hintableInputInstance.focus();
       return;
     }
     this.setState({
@@ -228,45 +141,12 @@ class GameLettersComponent extends React.Component {
       submitTint: -1
     }, () => {
       this.props.onSkipped(this.props.phrase);
-      this.activeElement.focus();
+      this.hintableInputInstance.reset();
+      this.hintableInputInstance.focus();
     });
   }
 
-  handleUserChallenge (e) {
-    e.preventDefault();
-    const userTyped = this.activeElement.value;
-    if (userTyped && userTyped.length) {
-      this.setState({
-        spaces: 0,
-        userTyped: ''
-      });
-    }
-    this.activeElement.focus();
-  }
-
-  testPhraseAcronymMatchForHintPreview (acronym, typed) {
-    if (!acronym) return '';
-    const pos = this.state.spaces;
-    let hintToUser = acronym.substring(pos);
-    const userEnteredAcronym = deriveAcronymFromPhrase(typed);
-    const officialLastLetter = acronym.substring(pos - 1, pos);
-    const userLastAcronymLetter = userEnteredAcronym.substring(pos - 1, pos);
-    if (userLastAcronymLetter !== officialLastLetter) {
-      hintToUser = acronym.substring(pos - 1);
-    }
-    return hintToUser;
-  }
-
   render () {
-    const acronym = this.dynamicAcronym;
-    const styleParams = {};
-    if (this.state.submitTint > -1) {
-      styleParams.color = `rgb(${this.state.submitTint}, 0, 0)`;
-    }
-    let disabledInputText = acronym;
-    const hinted = this.testPhraseAcronymMatchForHintPreview(acronym, this.state.userTyped);
-    disabledInputText = this.state.userTyped + hinted;
-    const cssNames = this.state.shakebox ? 'shakeit-short' : '';
     return el('div', {
       className: 'game-letters-component-box'
     },
@@ -279,32 +159,14 @@ class GameLettersComponent extends React.Component {
     el('form', {
       onSubmit: this.handleSubmit.bind(this)
     },
-    el('div', {
-      className: 'game-letters-component-input-box ' + cssNames,
-      ref: el => { this.box = el; }
-    },
-    el('input', {
-      type: 'text',
-      style: styleParams,
-      ref: el => { this.activeElement = el; },
-      autoComplete: 'off',
-      value: this.state.userTyped,
-      onKeyUp: this.handleKeyUp.bind(this),
-      onKeyDown: this.handleKeyDown.bind(this),
-      onKeyPress: this.handleKeyPress.bind(this),
-      onChange: this.handleChange.bind(this),
-      onFocus: this.handleFocus.bind(this),
-      onBlur: this.handleBlur.bind(this),
-      className: 'game-letters-component-input'
+    el(HintableInputComponent, {
+      userTyped: this.state.userTyped,
+      acronym: this.dynamicAcronym,
+      phrase: this.props.phrase,
+      submitTint: this.state.submitTint,
+      shakebox: this.state.shakebox,
+      ref: el => { this.hintableInputInstance = el; }
     }),
-    el('input', {
-      disabled: true,
-      type: 'text',
-      scrollleft: '100px',
-      ref: el => { this.disabledElement = el; },
-      value: disabledInputText,
-      className: 'game-letters-component-input-disabled'
-    })),
     el('button', {
       className: 'game-letters-component-button',
       type: 'submit'
@@ -320,6 +182,5 @@ class GameLettersComponent extends React.Component {
 
 export {
   GameLettersComponent,
-  nsfwFilter,
   deriveAcronymFromPhrase
 };

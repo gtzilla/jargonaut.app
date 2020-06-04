@@ -1,5 +1,11 @@
 'use strict';
 
+/**
+  Wraps localStorage.
+
+  Potentially replaced with indexDB in
+  future revisions.
+*/
 class ThinStorage {
   constructor (props) {
     this.db = window.localStorage;

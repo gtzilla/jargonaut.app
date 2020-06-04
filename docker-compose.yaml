@@ -10,5 +10,5 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./node_modules:/mnt/app/node-static
       - ./static:/mnt/app/static
-      - ./404.html:/mnt/app/404.html
+      - ./index.html:/mnt/app/index.html
 
