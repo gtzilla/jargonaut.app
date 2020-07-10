@@ -13,7 +13,10 @@ export function StructureComponent (props) {
       el('div', {
         className: 'container'
       },
-      el(TopNavigationComponent, { host: '/' }),
+      el(TopNavigationComponent, {
+        router: props.router,
+        host: '/'
+      }),
       el('h1', {},
         el('a', {
           title: 'Jargonaut',

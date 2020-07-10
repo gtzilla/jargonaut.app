@@ -47,7 +47,6 @@ export class HintableInputComponent extends React.PureComponent {
 
   constructor (props) {
     super(props);
-    console.log('HintableInputComponent constructor');
     this.state = {
       scrollLeft: 0,
       spaces: 0,

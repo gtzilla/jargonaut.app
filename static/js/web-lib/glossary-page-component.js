@@ -31,6 +31,7 @@ export class GlossaryPageComponent extends React.PureComponent {
 
   static get propTypes () {
     return {
+      router: () => {},
       solved: () => {},
       handleReset: () => {}
     };
@@ -57,7 +58,7 @@ export class GlossaryPageComponent extends React.PureComponent {
           onLibraryAdded: (rawLibraryUrl) => {
           }
         }),
-        el(StructureComponent, {},
+        el(StructureComponent, { router: this.props.router },
           el('div', {
             className: 'glossary-page-header'
           },
@@ -68,7 +69,7 @@ export class GlossaryPageComponent extends React.PureComponent {
           el('p', {}, 'Jargon decoded.'),
           el('a', { href }, 'Add Jargon'),
           ', ',
-          el('a', { href: '/export' }, 'Export'),
+          el('a', { href: '/share' }, 'Share'),
           ' or ',
           el('a', { href: '/' }, 'Solve')),
           el(GlossaryListComponent, {
@@ -81,7 +82,7 @@ export class GlossaryPageComponent extends React.PureComponent {
             },
             onReset: (e) => {
               this.props.handleReset(e);
-              document.location.assign('/');
+              // document.location.assign('/');
             },
             side: 'left'
           }))));

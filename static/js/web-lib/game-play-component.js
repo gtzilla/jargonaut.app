@@ -130,6 +130,7 @@ export function GamePlayComponent (props) {
         }
       }),
       el(StructureComponent, {
+        router: props.router,
         remaining: phrases.length,
         acronym: acronym
       },

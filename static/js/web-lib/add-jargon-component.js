@@ -35,6 +35,7 @@ export class AddJargonComponent extends React.Component {
 
   static get propTypes () {
     return {
+      router: () => {},
       solved: () => {},
       phrases: () => {},
       actionText: () => {},
@@ -218,7 +219,7 @@ export class AddJargonComponent extends React.Component {
             this.props.onLibraryAdded(rawLibraryUrl);
           }
         }),
-        el(StructureComponent, {},
+        el(StructureComponent, { router: this.props.router },
           el('div', {
             className: 'game-letters-suggestion-box'
           },
@@ -236,7 +237,7 @@ export class AddJargonComponent extends React.Component {
               className: 'game-suggestion-abbreviation-teaser'
             }, 'abbreviation'),
             ' formed from the initial letters of other words and pronounced as a word (e.g. ASCII, NASA ).',
-            ' Build your own Jargon')),
+            ' Build your own Jargon by typing below.')),
           el('form', {
             onSubmit: this.onSubmitWrapper.bind(this),
             method: 'GET',

@@ -8,8 +8,11 @@ import { PrivacyPolicyComponent } from '../web-lib/privacy-policy-component.js';
 import { UserPreferencesComponent } from '../web-lib/user-preferences-component.js';
 import { StructureComponent } from '../web-lib/structure-component.js';
 import { ExportJargonComponent } from '../web-lib/export-jargon-component.js';
-// import { UnknownJargonComponent } from '../web-lib/unknown-jargon-component.js';
+import { unsolvedPhrases } from '../web-lib/glossary-list-component.js';
 import {
+  getCollection,
+  nsfwFilter
+  ,
   GamePlayComponent,
   getShuffledCollection,
   resetStoredInfo
@@ -25,8 +28,12 @@ function userReset (e) {
 }
 
 async function loadPhraseOrNavigateToWon (done, params) {
-  if (thinStore.get('won_v1')) {
-    document.location.assign('/edit-jargon');
+  const isNSFW = thinStore.get('nsfw_v1') || false;
+  const appendToStarter = thinStore.get('append_to_starter_v1') || false;
+  const allPhrases = nsfwFilter(isNSFW, getCollection(appendToStarter));
+  const unsolved = unsolvedPhrases(allPhrases);
+  if (!unsolved.length) {
+    router.navigate('/edit-jargon');
     done(false);
   }
   done(true);
@@ -37,6 +44,7 @@ function addMoreJargonView () {
   ReactDOM.render(
     el(AddJargonComponent, {
       actionText: 'Add',
+      router,
       onLibraryAdded: (gistLibraryUrl) => {
         if (!gistLibraryUrl) {
           // came via URL, not gist
@@ -64,6 +72,7 @@ function addMoreJargonView () {
 function glossaryListPage () {
   ReactDOM.render(
     el(GlossaryPageComponent, {
+      router,
       handleReset: (e) => {
         userReset(e);
         document.location.reload();
@@ -77,8 +86,10 @@ function glossaryListPage () {
 function privacyPolicyDisplayPage () {
   ReactDOM.render(
     el(React.Fragment, {},
-      el(StructureComponent, {},
-        el(PrivacyPolicyComponent, {}))),
+      el(StructureComponent, {
+        router
+      },
+      el(PrivacyPolicyComponent, {}))),
     document.getElementById('container-v2')
   );
 }
@@ -87,6 +98,7 @@ function jargonautDisplayPage (params) {
   const { acronym, jargonType } = params;
   ReactDOM.render(
     el(GamePlayComponent, {
+      router,
       onAcronymClick: () => {
         console.log('an acronym in the success list was clicked');
       },
@@ -119,7 +131,7 @@ export function ExportLibraryDisplayComponent (props) {
           thinStore.set('append_to_starter_v1', isAppendToStarter);
         }
       }),
-      el(StructureComponent, {},
+      el(StructureComponent, { router: props.router },
         el(ExportJargonComponent, {
           itemsLength: phrases.length,
           appendToStarter,
@@ -130,7 +142,9 @@ export function ExportLibraryDisplayComponent (props) {
 
 function exportJargonDisplayPage () {
   ReactDOM.render(
-    el(ExportLibraryDisplayComponent, {}),
+    el(ExportLibraryDisplayComponent, {
+      router
+    }),
     document.getElementById('container-v2')
   );
 }
@@ -141,7 +155,7 @@ function exportJargonDisplayPage () {
 router
   .notFound(addMoreJargonView)
   .on('/privacy-policy', privacyPolicyDisplayPage, {})
-  .on('/export-jargon', exportJargonDisplayPage, {})
+  .on('/share', exportJargonDisplayPage, {})
   .on('/glossary', glossaryListPage, {})
   .on('/acronym/:acronym', jargonautDisplayPage, {
     before: loadPhraseOrNavigateToWon
