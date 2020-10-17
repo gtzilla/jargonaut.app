@@ -42,9 +42,9 @@ export class GlossaryListComponent extends React.Component {
     };
   }
 
-  handleClick (e) {
+  handleClick (evt) {
     if (this.props.onAcronymClick) {
-      this.props.onAcronymClick(e);
+      this.props.onAcronymClick(evt);
     }
   }
 
@@ -52,12 +52,12 @@ export class GlossaryListComponent extends React.Component {
     return Array.from(this.props.solved).sort(phraseSort) || [];
   }
 
-  handleClickRemove (e) {
-    e.preventDefault();
-    const idx = e.currentTarget.getAttribute('data-index');
+  handleClickRemove (evt) {
+    evt.preventDefault();
+    const idx = evt.currentTarget.getAttribute('data-index');
     const targetSolved = this.solved[idx];
     if (_.isFunction(this.props.onRemoveClick)) {
-      this.props.onRemoveClick(e, targetSolved);
+      this.props.onRemoveClick(evt, targetSolved);
     }
   }
 
@@ -77,6 +77,9 @@ export class GlossaryListComponent extends React.Component {
           style,
           className: 'success-list-component-box side_' + this.props.side || 'right'
         },
+        // el('div', {
+        //   className:'success-list-component-box-grid'
+        // },
         el(JargonAndArconymComponent, {
           noSpoilers: this.props.noSpoilers,
           unsolved: this.props.unsolved,

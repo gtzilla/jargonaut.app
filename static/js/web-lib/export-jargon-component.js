@@ -8,8 +8,8 @@ export function TextCopyBoxComponent (props) {
   shareJsonUrl.search = new URLSearchParams({
     json: window.btoa(JSON.stringify(props.exportData))
   });
-  const handleUrlCopySubmit = e => {
-    e.preventDefault();
+  const handleUrlCopySubmit = evt => {
+    evt.preventDefault();
     navigator.clipboard.writeText(inputRef.value || '');
   };
   return (
@@ -36,8 +36,8 @@ export function TextCopyBoxComponent (props) {
 }
 
 export class ExportJargonComponent extends React.PureComponent {
-  handleSubmit (e) {
-    e.preventDefault();
+  handleSubmit (evt) {
+    evt.preventDefault();
     navigator.clipboard.writeText(this.textarea.value || '');
   }
 
@@ -47,8 +47,8 @@ export class ExportJargonComponent extends React.PureComponent {
     };
   }
 
-  handleUrlCopySubmit (e) {
-    e.preventDefault();
+  handleUrlCopySubmit (evt) {
+    evt.preventDefault();
     navigator.clipboard.writeText(this.textarea.value || '');
   }
 

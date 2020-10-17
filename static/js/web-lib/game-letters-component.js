@@ -43,6 +43,7 @@ class GameLettersComponent extends React.Component {
 
   static get propTypes () {
     return {
+      acronym: () => {},
       phrase: () => {},
       allPhrases: () => {},
       existingSkipped: () => {},
@@ -54,6 +55,14 @@ class GameLettersComponent extends React.Component {
       onSkipped: () => {},
       isNSFW: () => {},
       onAnswerWrong: () => {}
+    };
+  }
+
+  static get defaultProps () {
+    return {
+      acronym: null,
+      onAnswerWrong: () => {},
+      onUpdated: () => {}
     };
   }
 
@@ -80,65 +89,60 @@ class GameLettersComponent extends React.Component {
   }
 
   get dynamicAcronym () {
+    if (!this.props.phrase) return;
     return this.props.phrase.alt ? this.props.phrase.alt : deriveAcronymFromPhrase(this.props.phrase.phrase);
   }
 
   componentDidUpdate () {
-    if (this.props.onUpdated) {
-      this.props.onUpdated(this.props.phrase, this.dynamicAcronym);
-    }
+
   }
 
-  handleSubmit (e) {
-    e.preventDefault();
+  handleSubmit (evt) {
+    evt.preventDefault();
     const currentlyActive = this.props.phrase;
     const testedPhrase = this.hintableInputInstance.value.trim();
     const isValid = this.validateTypedPhraseCorrect(testedPhrase);
+
     if (isValid) {
       this.props.onAnswerCorrect(currentlyActive);
       this.setState({
-        submitTint: -1,
         shakebox: false,
         userTyped: '',
         spaces: 0
+      }, () => {
+        this.props.onUpdated(this.props.phrase, this.dynamicAcronym);
       });
       this.hintableInputInstance.focus();
       this.hintableInputInstance.reset();
     } else {
-      let useTint = this.state.submitTint;
-      useTint += 30;
       this.setState({
-        submitTint: useTint,
         shakebox: true
       }, () => {
-        // inelegant
         setTimeout(() => {
           this.setState({
             shakebox: false
           });
         }, 1500);
       });
-      if (this.props.onAnswerWrong) {
-        this.props.onAnswerWrong(currentlyActive);
-      }
+      this.props.onAnswerWrong(currentlyActive);
     }
   }
 
-  handleReset (e) {
-    this.props.handleReset(e);
+  handleReset (evt) {
+    this.props.handleReset(evt);
     document.location.reload();
   }
 
-  handleSkipClicked (e) {
-    e.preventDefault();
+  handleSkipClicked (evt) {
+    evt.preventDefault();
     if (!this.props.allPhrases.length) {
       this.hintableInputInstance.focus();
       return;
     }
     this.setState({
       userTyped: '',
-      spaces: 0,
-      submitTint: -1
+      spaces: 0
+      // submitTint: -1
     }, () => {
       this.props.onSkipped(this.props.phrase);
       this.hintableInputInstance.reset();

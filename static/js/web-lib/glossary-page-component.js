@@ -43,7 +43,7 @@ export class GlossaryPageComponent extends React.PureComponent {
       el(React.Fragment, {},
         el(UserPreferencesComponent, {
           appendToStarter: this.state.appendToStarter,
-          onChange: (e, isNSFW) => {},
+          onChange: (evt, isNSFW) => {},
           onAppendToggleChange: (isAppendToStarter) => {
             this.setState({
               appendToStarter: isAppendToStarter
@@ -80,8 +80,8 @@ export class GlossaryPageComponent extends React.PureComponent {
             onAcronymClick: () => {
               console.log('An acronym in the success list was clicked');
             },
-            onReset: (e) => {
-              this.props.handleReset(e);
+            onReset: (evt) => {
+              this.props.handleReset(evt);
               // document.location.assign('/');
             },
             side: 'left'

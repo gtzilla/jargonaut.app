@@ -18,14 +18,14 @@ class ThinStorage {
   get (key) {
     try {
       return JSON.parse(this.db.getItem(key));
-    } catch (e) {}
+    } catch (err) {}
     return null;
   }
 
   del (key) {
     try {
       return this.db.removeItem(key);
-    } catch (e) {}
+    } catch (err) {}
     return null;
   }
 }

@@ -70,35 +70,35 @@ export class AddJargonComponent extends React.Component {
     console.error('error', error, errorInfo);
   }
 
-  handleChange (e) {
+  handleChange (evt) {
     this.setState({
       suggestedPhrase: this.input.value
     });
   }
 
-  onSubmitWrapper (e) {
-    console.log('onSubmitWrapper', e);
-    e.preventDefault();
+  onSubmitWrapper (evt) {
+    console.log('onSubmitWrapper', evt);
+    evt.preventDefault();
     if (this.props.onSubmit && _.isFunction(this.props.onSubmit)) {
-      this.props.onSubmit(e, this.input.value, this.dynamicAcronym);
+      this.props.onSubmit(evt, this.input.value, this.dynamicAcronym);
     }
-    return this.handleSubmit(e, this.input.value, this.dynamicAcronym);
+    return this.handleSubmit(evt, this.input.value, this.dynamicAcronym);
   }
 
   componentDidMount () {
     this.input.focus();
   }
 
-  handleClick (e) {
-    e.preventDefault();
-    if (!e.target) return;
-    console.log('e.target.nodeName', e.target.nodeName);
-    if (e.target.nodeName.toLowerCase() !== 'a') return;
-    const uls = e.currentTarget.parentNode.querySelectorAll('ul');
+  handleClick (evt) {
+    evt.preventDefault();
+    if (!evt.target) return;
+    console.log('evt.target.nodeName', evt.target.nodeName);
+    if (evt.target.nodeName.toLowerCase() !== 'a') return;
+    const uls = evt.currentTarget.parentNode.querySelectorAll('ul');
     if (!uls) {
       return;
     }
-    const letterId = e.target.getAttribute('data-id');
+    const letterId = evt.target.getAttribute('data-id');
     const found = this.state.letters.findIndex(item => {
       if (item.letterId === letterId) return true;
     });
@@ -116,8 +116,8 @@ export class AddJargonComponent extends React.Component {
     }
   }
 
-  async handleSubmit (e, phrase = null, acronym = null) {
-    e.preventDefault();
+  async handleSubmit (evt, phrase = null, acronym = null) {
+    evt.preventDefault();
     const suggestedPhrase = this.input.value || null;
 
     this.setState({
@@ -133,6 +133,7 @@ export class AddJargonComponent extends React.Component {
           count: this.state.count + 1
         }, () => {
           thinStore.set('custom_dict_v1', this.state.phrases);
+          thinStore.del('nextUp_v1');
           this.resetState();
         });
         thinStore.del('won_v1');
@@ -140,7 +141,7 @@ export class AddJargonComponent extends React.Component {
     });
   }
 
-  handleKeyUp (e) {
+  handleKeyUp (evt) {
     if (!this.input.value.length) {
       this.setState({
         alt: null,
@@ -162,7 +163,7 @@ export class AddJargonComponent extends React.Component {
 
     });
     if (this.props.onKeyUp) {
-      this.props.onKeyUp(e, this.input.value);
+      this.props.onKeyUp(evt, this.input.value);
     }
   }
 
@@ -193,7 +194,7 @@ export class AddJargonComponent extends React.Component {
       el(React.Fragment, {},
         el(UserPreferencesComponent, {
           appendToStarter: this.state.appendToStarter,
-          onChange: (e, isNSFW) => {
+          onChange: (evt, isNSFW) => {
             const unsolved = unsolvedPhrases(isNSFW);
             this.setState({
               unsolved
@@ -257,7 +258,7 @@ export class AddJargonComponent extends React.Component {
             solved: new Set(this.state.phrases || []),
             unsolved: unsolvedPhrases(false),
             noSpoilers: true,
-            onRemoveClick: (e, data) => {
+            onRemoveClick: (evt, data) => {
               console.log('got data into add jargon.js', data);
               const exists = thinStore.get('custom_dict_v1') || [];
               const found = exists.findIndex(item => {

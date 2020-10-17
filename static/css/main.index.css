@@ -40,7 +40,6 @@ a:visited {
 }
 
 .game-editable-acronym-letter-remove-control-box a {
-  /* font-size: 12pt; */
   text-decoration: none;
 }
 
@@ -590,6 +589,10 @@ h1 a:visited {
 .unknown-jarson-single-item span {
   display: block;
 }
+
+
+
+
 @keyframes panel_close {
   from {
     opacity: 1;

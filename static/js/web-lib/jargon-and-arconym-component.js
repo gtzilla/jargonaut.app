@@ -4,10 +4,10 @@ import { deriveAcronymFromPhrase } from './game-letters-component.js';
 
 const el = React.createElement.bind(React);
 
-export function phraseSort (a, b) {
-  if (a.phrase > b.phrase) return 1;
-  if (a.phrase < b.phrase) return -1;
-  if (a.phrase === b.phrase) return 0;
+export function phraseSort (item1, item2) {
+  if (item1.phrase > item2.phrase) return 1;
+  if (item1.phrase < item2.phrase) return -1;
+  if (item1.phrase === item2.phrase) return 0;
 }
 
 export function JargonAndArconymComponent (props) {
@@ -26,16 +26,18 @@ export function JargonAndArconymComponent (props) {
       onClick: props.handleClickRemove.bind(this),
       className: 'success-list-single-item-removed-btn'
     }, 'X');
-    return el('div', {},
-      el('ul', {
-        className: 'success-list-subview-flexlist'
-      },
-      props.allowRemoval && props.side !== 'left' ? closeButton : null,
-      el('li', {}, phraseOrSpoilerBlock),
-      el('li', {
-      }, el('a', { href: '/acronym/' + acronym }, acronym)),
+    return el('div', {
+      className: 'success-list-single-item'
+    },
+    el('ul', {
+      className: 'success-list-subview-flexlist'
+    },
+    props.allowRemoval && props.side !== 'left' ? closeButton : null,
+    el('li', {}, phraseOrSpoilerBlock),
+    el('li', {
+    }, el('a', { href: '/acronym/' + acronym }, acronym)),
 
-      props.allowRemoval && props.side === 'right' ? closeButton : null));
+    props.allowRemoval && props.side === 'right' ? closeButton : null));
   });
   return (
     el(React.Fragment, {},

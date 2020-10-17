@@ -2,8 +2,8 @@
 
 const el = React.createElement.bind(React);
 
-function hasModifier (e) {
-  return e.metaKey || e.altKey || e.shiftKey || e.ctrlKey;
+function hasModifier (evt) {
+  return evt.metaKey || evt.altKey || evt.shiftKey || evt.ctrlKey;
 }
 
 function capitalizer (typed) {
@@ -51,8 +51,8 @@ export class HintableInputComponent extends React.PureComponent {
       scrollLeft: 0,
       spaces: 0,
       submitTint: props.submitTint,
-      userTyped: props.userTyped,
-      shakebox: props.shakebox
+      userTyped: props.userTyped
+      // shakebox: props.shakebox
     };
   }
 
@@ -63,7 +63,7 @@ export class HintableInputComponent extends React.PureComponent {
   reset () {
     this.setState({
       submitTint: -1,
-      shakebox: false,
+      // shakebox: false,
       userTyped: '',
       spaces: 0
     });
@@ -75,66 +75,66 @@ export class HintableInputComponent extends React.PureComponent {
 
   componentDidUpdate () {
     this.disabledElement.scrollLeft = this.state.scrollLeft;
-    this.setState({
-      shakebox: this.props.shakebox
-    });
   }
 
   matchScrollPosition () {
     if (this.activeElement) { this.disabledElement.scrollLeft = this.activeElement.scrollLeft; }
   }
 
-  handleChange (e) {
-    let typed = e.currentTarget.value;
+  handleChange (evt) {
+    let typed = evt.currentTarget.value;
     typed = typed.replace(/\s{2,}/g, ' ');
     const splitted = typed.trim().split(' ');
     typed = capitalizer(typed);
     this.setState({
       spaces: splitted.length,
-      scrollLeft: e.currentTarget.scrollLeft
+      scrollLeft: evt.currentTarget.scrollLeft
     });
     if (typed.length === 0) {
       this.setState({
         userTyped: typed,
         spaces: 0
       });
-      e.currentTarget.blur();
-      e.currentTarget.focus();
+      evt.currentTarget.blur();
+      evt.currentTarget.focus();
     } else {
       this.setState({
         userTyped: typed
       });
     }
-    this.disabledElement.scrollLeft = e.currentTarget.scrollLeft;
+    this.disabledElement.scrollLeft = evt.currentTarget.scrollLeft;
+    this.setState({
+      // shakebox: this.props.shakebox
+    });
   }
 
-  handleFocus (e) {
-    const el = e.currentTarget;
+  handleFocus (evt) {
+    const el = evt.currentTarget;
     if (!this.props.phrase) return;
     el.selectionStart = el.selectionEnd = el.value.length;
   }
 
-  handleBlur (e) {
+  handleBlur (evt) {
     this.disabledElement.scrollLeft = 0;
   }
 
-  handleKeyUp (e) {
+  handleKeyUp (evt) {
     this.matchScrollPosition();
   }
 
-  handleKeyPress (e) {
+  handleKeyPress (evt) {
     setTimeout(() => {
       this.matchScrollPosition();
     }, 5);
   }
 
-  handleKeyDown (e) {
-    if (e.keyCode === 9) {
-      e.preventDefault();
+  handleKeyDown (evt) {
+    if (evt.keyCode === 9) {
+      evt.preventDefault();
     }
-    if (!hasModifier(e) && (e.keyCode === 39 || e.keyCode === 9)) {
+    if (!hasModifier(evt) && (evt.keyCode === 39 || evt.keyCode === 9)) {
       const acronym = this.props.acronym;
-      let typed = e.currentTarget.value;
+      let typed = evt.currentTarget.value;
       const splitted = typed.trim().split(' ');
       let spaces = splitted.length;
       if (!typed) {
@@ -148,7 +148,7 @@ export class HintableInputComponent extends React.PureComponent {
       }
       this.setState({
         userTyped: typed,
-        shakebox: false,
+        // shakebox: false,
         spaces
       });
       this.matchScrollPosition();
@@ -160,7 +160,7 @@ export class HintableInputComponent extends React.PureComponent {
     if (this.props.submitTint > -1) {
       styleParams.color = `rgb(${this.state.submitTint}, 0, 0)`;
     }
-    const cssNames = this.state.shakebox ? 'shakeit-short' : '';
+    const cssNames = this.props.shakebox ? 'shakeit-short' : '';
     const hinted = testPhraseAcronymMatchForHintPreview(this.props.acronym, this.state.userTyped, this.state.spaces);
     return (
       el(React.Fragment, {},

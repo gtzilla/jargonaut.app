@@ -1,6 +1,7 @@
 'use strict';
 
-import Navigo from '../../../node-static/navigo/lib/navigo.es.js';
+import { WebRouter } from '../../../node-static/web-router.js/dist/web-router.js';
+// import { WebRouter } from '../../../node-static/web-router.js/src/index.js';
 import { AddJargonComponent } from '../web-lib/add-jargon-component.js';
 import { GlossaryPageComponent } from '../web-lib/glossary-page-component.js';
 import { ThinStorage } from '../web-lib/thin-storage.js';
@@ -11,8 +12,7 @@ import { ExportJargonComponent } from '../web-lib/export-jargon-component.js';
 import { unsolvedPhrases } from '../web-lib/glossary-list-component.js';
 import {
   getCollection,
-  nsfwFilter
-  ,
+  nsfwFilter,
   GamePlayComponent,
   getShuffledCollection,
   resetStoredInfo
@@ -20,10 +20,10 @@ import {
 
 const thinStore = new ThinStorage();
 const el = React.createElement.bind(React);
-const router = new Navigo(document.location.origin);
+const router = new WebRouter();
 
-function userReset (e) {
-  e.preventDefault();
+function userReset (evt) {
+  evt.preventDefault();
   resetStoredInfo();
 }
 
@@ -73,8 +73,8 @@ function glossaryListPage () {
   ReactDOM.render(
     el(GlossaryPageComponent, {
       router,
-      handleReset: (e) => {
-        userReset(e);
+      handleReset: (evt) => {
+        userReset(evt);
         document.location.reload();
       }
 
@@ -96,6 +96,7 @@ function privacyPolicyDisplayPage () {
 
 function jargonautDisplayPage (params) {
   const { acronym, jargonType } = params;
+  // console.log("jargonautDisplayPage()", acronym)
   ReactDOM.render(
     el(GamePlayComponent, {
       router,

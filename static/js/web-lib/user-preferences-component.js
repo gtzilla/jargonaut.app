@@ -31,10 +31,10 @@ function onlyValidModels (item) {
 
 function gistParseContentFromApiResponse (data) {
   const mapped = [];
-  for (const k in data.files) {
+  for (const key in data.files) {
     let content = null;
     try {
-      content = JSON.parse(window.atob(data.files[k].content));
+      content = JSON.parse(window.atob(data.files[key].content));
     } catch (err) {
       console.error('ERROR', err);
     }
@@ -67,7 +67,7 @@ export class UserPreferencesComponent extends React.Component {
       let mappedJson = null;
       try {
         mappedJson = JSON.parse(window.atob(rawJson));
-      } catch (e) {}
+      } catch (err) {}
       const { stats, aggregate } = this.importLibraryJson(mappedJson);
       this.state.aggregate = aggregate;
       this.state.stats = stats;
@@ -103,8 +103,8 @@ export class UserPreferencesComponent extends React.Component {
     return { aggregate, stats };
   }
 
-  handleClick (e) {
-    e.preventDefault();
+  handleClick (evt) {
+    evt.preventDefault();
     this.setState({
       closeOpenedPanel: this.state.insertPanel,
       insertPanel: !this.state.insertPanel
@@ -114,13 +114,13 @@ export class UserPreferencesComponent extends React.Component {
     }
   }
 
-  handleChange (e) {
+  handleChange (evt) {
     this.setState({
       nsfw: !this.state.nsfw
     }, () => {
       thinStore.set('nsfw_v1', this.state.nsfw);
     });
-    this.props.onChange(e, !this.state.nsfw);
+    this.props.onChange(evt, !this.state.nsfw);
   }
 
   fetchGistData (value) {
@@ -181,8 +181,8 @@ export class UserPreferencesComponent extends React.Component {
       });
   }
 
-  handleSubmit (e) {
-    e.preventDefault();
+  handleSubmit (evt) {
+    evt.preventDefault();
     const rawUrl = this.libraryUrlInput.value;
     this.setState({
       fetchedFailed: false
@@ -192,7 +192,7 @@ export class UserPreferencesComponent extends React.Component {
     });
   }
 
-  handleAnimateEnd (e) {
+  handleAnimateEnd (evt) {
     if (this.state.closeOpenedPanel && this.props.onEndClose) {
       this.props.onEndClose();
     }
@@ -201,9 +201,9 @@ export class UserPreferencesComponent extends React.Component {
     });
   }
 
-  handleChangeAppendToStarter (e) {
+  handleChangeAppendToStarter (evt) {
     if (this.props.onAppendToggleChange) {
-      this.props.onAppendToggleChange(e.target.checked);
+      this.props.onAppendToggleChange(evt.target.checked);
     }
   }
 
@@ -255,14 +255,14 @@ export class UserPreferencesComponent extends React.Component {
                   type: 'checkbox',
                   checked: this.state.nsfw,
                   onChange: this.handleChange.bind(this)
-                }), 'NSFW')),
-            el('div', {},
-              el('label', {},
-                el('input', {
-                  type: 'checkbox',
-                  checked: this.props.appendToStarter,
-                  onChange: this.handleChangeAppendToStarter.bind(this)
-                }), 'Append to starter Jargon'))),
+                }), 'NSFW'))),
+          // el('div', {},
+          //   el('label', {},
+          //     el('input', {
+          //       type: 'checkbox',
+          //       checked: this.props.appendToStarter,
+          //       onChange: this.handleChangeAppendToStarter.bind(this)
+          //     }), 'Append to starter Jargon'))),
           el('div', {
             className: 'custom-library-input-container'
           },
