@@ -13,7 +13,7 @@ echo 'Adding Vendor libraries'
 mv node_modules/react node-static
 mv node_modules/react-dom node-static
 mv node_modules/underscore node-static
-mv node_modules/navigo node-static
+mv node_modules/web-router.js node-static
 mv node_modules/moment node-static
 echo 'Done adding Vendor libraries'
 # github is using the README.md as an index.html. 

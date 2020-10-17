@@ -6028,7 +6028,7 @@ walker@^1.0.7, walker@~1.0.5:
   dependencies:
     makeerror "1.0.x"
 
-web-router.js@^2.0.9:
+web-router.js@^2.0.8:
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/web-router.js/-/web-router.js-2.0.8.tgz#e69cb248f6c76fa28b46e66e12b8bad229f577de"
   integrity sha512-Z/5B02emtfnYkBfqywCJuNVgI60B+AMPZorJn8d08V2MfKOclin5ZVZ9P/ZPrjdhCzIUJ97jqDK9Gsfs3mQKow==
