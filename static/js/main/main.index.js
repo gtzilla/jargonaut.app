@@ -1,6 +1,6 @@
 'use strict';
 
-import { WebRouter } from '../../../node-static/web-router.js/dist/web-router.js';
+import { WebRouter } from '../../../node-static/web-router.js/dist/web-router.js?r=1';
 // import { WebRouter } from '../../../node-static/web-router.js/src/index.js';
 import { AddJargonComponent } from '../web-lib/add-jargon-component.js';
 import { GlossaryPageComponent } from '../web-lib/glossary-page-component.js';
