@@ -18,8 +18,7 @@ const thinStore = new ThinStorage();
 
 export function unsolvedPhrases (isNSFW) {
   const solved = thinStore.get('correct_v1') || [];
-  const appendToStarter = thinStore.get('append_to_starter_v1') || false;
-  const allPhrases = nsfwFilter(isNSFW, getShuffledCollection(appendToStarter));
+  const allPhrases = nsfwFilter(isNSFW, getShuffledCollection());
   const unsolved = allPhrases.filter(item => {
     return !solved.find(obj => {
       return obj.phrase === item.phrase;
@@ -77,9 +76,6 @@ export class GlossaryListComponent extends React.Component {
           style,
           className: 'success-list-component-box side_' + this.props.side || 'right'
         },
-        // el('div', {
-        //   className:'success-list-component-box-grid'
-        // },
         el(JargonAndArconymComponent, {
           noSpoilers: this.props.noSpoilers,
           unsolved: this.props.unsolved,

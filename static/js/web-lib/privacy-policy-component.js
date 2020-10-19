@@ -6,9 +6,13 @@ export class PrivacyPolicyComponent extends React.PureComponent {
   render () {
     return (
       el('div', {
-        className: 'privacy-policy-container'
+        className: 'privacy-policy-container',
+        role: 'document',
+        'aria-label': 'privacy policy'
       },
-      el('h1', {}, 'Privacy'),
+      el('h1', {
+        'aria-label': 'Privacy Information'
+      }, 'Privacy'),
       el('h3', {}, 'Warranty and Support'),
       el('p', {},
         'There is no warranty. Support for general bugs is best communicated',
@@ -24,7 +28,7 @@ export class PrivacyPolicyComponent extends React.PureComponent {
         ' The source code link above is available for review.'),
       el('h3', {}, 'Telemetry'),
       el('p', {},
-        'Jargonaut.app keeps your internal, enterprise, jargon private.',
+        'Jargonaut.app keeps your enterprise jargon private.',
         ' Jargonaut.app does not collect Telemetry, nor is it able to collect Telemetry.',
         ' This project, Jargonaut.app, does not collect any serverside Telemetry',
         ' Jargonaut.app is hosted using Github and is a JavaScript Single Page Application (SPA)',

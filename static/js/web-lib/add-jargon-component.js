@@ -24,7 +24,6 @@ export class AddJargonComponent extends React.Component {
     this.state = {
       count: 0,
       letters: [],
-      appendToStarter: thinStore.get('append_to_starter_v1') || false,
       suggestedPhrase: props.suggestedPhrase || null,
       alt: null,
       type: 'pure',
@@ -193,25 +192,11 @@ export class AddJargonComponent extends React.Component {
     return (
       el(React.Fragment, {},
         el(UserPreferencesComponent, {
-          appendToStarter: this.state.appendToStarter,
           onChange: (evt, isNSFW) => {
             const unsolved = unsolvedPhrases(isNSFW);
             this.setState({
               unsolved
             });
-          },
-          onAppendToggleChange: (isAppendToStarter) => {
-            this.setState({
-              appendToStarter: isAppendToStarter
-            });
-            // warn: hardcoded nsfw flag here.
-            const unsolved = unsolvedPhrases(false);
-            this.setState({
-              unsolved
-            });
-
-            thinStore.del('nextUp_v1');
-            thinStore.set('append_to_starter_v1', isAppendToStarter);
           },
           onLibraryAdded: (rawLibraryUrl) => {
             thinStore.del('nextUp_v1');

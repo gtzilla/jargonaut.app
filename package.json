@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint --fix static/js/*/*.js",
-    "lint-tests": "eslint --fix __tests__/*/*.js",
+    "lint-test": "eslint --fix __tests__/*/*.js",
     "test": "node --experimental-modules --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --config=./jest.config.js",
     "start": "docker-compose -f docker-compose.yaml up"
   },

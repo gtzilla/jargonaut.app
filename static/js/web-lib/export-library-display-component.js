@@ -12,31 +12,20 @@ const el = React.createElement.bind(React);
 const thinStore = new ThinStorage();
 
 export function ExportLibraryDisplayComponent (props) {
-  const isAppendToStarter = thinStore.get('append_to_starter_v1') || false;
-  const _phraseCollection = getShuffledCollection(isAppendToStarter);
-  const [phrases, setPhrases] = React.useState(_phraseCollection);
-  const [appendToStarter, setAppendToStarter] = React.useState(isAppendToStarter);
+  const _phraseCollection = getShuffledCollection();
+  const [phrases] = React.useState(_phraseCollection);
   return (
     el(React.Fragment, {},
       el(UserPreferencesComponent, {
-        appendToStarter,
         onChange: () => {},
         onLibraryAdded: () => {
           thinStore.del('nextUp_v1');
           thinStore.del('skipped_v1');
-        },
-        onAppendToggleChange: (isAppendToStarter) => {
-          const phraseCollection = getShuffledCollection(isAppendToStarter);
-          setAppendToStarter(isAppendToStarter);
-          setPhrases(phraseCollection);
-          thinStore.del('nextUp_v1');
-          thinStore.set('append_to_starter_v1', isAppendToStarter);
         }
       }),
       el(StructureComponent, { router: props.router },
         el(ExportJargonComponent, {
           itemsLength: phrases.length,
-          appendToStarter,
           exportData: phrases
         })))
   );

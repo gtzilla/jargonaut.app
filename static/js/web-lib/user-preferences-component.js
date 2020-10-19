@@ -78,9 +78,7 @@ export class UserPreferencesComponent extends React.Component {
 
   static get propTypes () {
     return {
-      appendToStarter: () => {},
       isNSFW: () => {},
-      onAppendToggleChange: () => {},
       onLibraryAdded: () => {},
       existingLibraries: () => {},
       onChange: () => {},
@@ -256,13 +254,6 @@ export class UserPreferencesComponent extends React.Component {
                   checked: this.state.nsfw,
                   onChange: this.handleChange.bind(this)
                 }), 'NSFW'))),
-          // el('div', {},
-          //   el('label', {},
-          //     el('input', {
-          //       type: 'checkbox',
-          //       checked: this.props.appendToStarter,
-          //       onChange: this.handleChangeAppendToStarter.bind(this)
-          //     }), 'Append to starter Jargon'))),
           el('div', {
             className: 'custom-library-input-container'
           },

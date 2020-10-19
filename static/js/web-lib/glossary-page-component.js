@@ -20,12 +20,10 @@ export class GlossaryPageComponent extends React.PureComponent {
   constructor (props) {
     super(props);
     const isNSFW = thinStore.get('nsfw_v1') || false;
-    const appendToStarter = thinStore.get('append_to_starter_v1') || false;
-    const allPhrases = nsfwFilter(isNSFW, getCollection(appendToStarter));
+    const allPhrases = nsfwFilter(isNSFW, getCollection());
     this.state = {
       allPhrases,
-      unsolved: unsolvedPhrases(isNSFW),
-      appendToStarter: thinStore.get('append_to_starter_v1') || false
+      unsolved: unsolvedPhrases(isNSFW)
     };
   }
 
@@ -42,21 +40,8 @@ export class GlossaryPageComponent extends React.PureComponent {
     return (
       el(React.Fragment, {},
         el(UserPreferencesComponent, {
-          appendToStarter: this.state.appendToStarter,
           onChange: (evt, isNSFW) => {},
-          onAppendToggleChange: (isAppendToStarter) => {
-            this.setState({
-              appendToStarter: isAppendToStarter
-            });
-            const solved = thinStore.get('correct_v1') || [];
-            this.setState({
-              solved
-            });
-            thinStore.del('nextUp_v1');
-            thinStore.set('append_to_starter_v1', isAppendToStarter);
-          },
-          onLibraryAdded: (rawLibraryUrl) => {
-          }
+          onLibraryAdded: (rawLibraryUrl) => {}
         }),
         el(StructureComponent, { router: this.props.router },
           el('div', {
@@ -74,7 +59,6 @@ export class GlossaryPageComponent extends React.PureComponent {
           el('a', { href: '/' }, 'Solve')),
           el(GlossaryListComponent, {
             noSpoilers: true,
-            // poorly named. solved is more like all
             solved: this.state.allPhrases,
             unsolved: this.state.unsolved,
             onAcronymClick: () => {
@@ -82,7 +66,6 @@ export class GlossaryPageComponent extends React.PureComponent {
             },
             onReset: (evt) => {
               this.props.handleReset(evt);
-              // document.location.assign('/');
             },
             side: 'left'
           }))));

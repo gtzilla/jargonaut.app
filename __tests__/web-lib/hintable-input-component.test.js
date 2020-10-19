@@ -1,5 +1,6 @@
 'use strict';
 
+import '@testing-library/jest-dom';
 import rtl from '@testing-library/react';
 import ruetl from '@testing-library/user-event';
 import { describe, expect, it } from '@jest/globals';

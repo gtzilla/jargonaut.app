@@ -22,12 +22,12 @@ export function pickCorrectAcronym (item) {
   return item && item.alt ? item.alt : deriveAcronymFromPhrase(item && item.phrase);
 }
 
-export function getShuffledCollection (appendToStarter = true) {
-  return _.shuffle(getCollection(appendToStarter));
+export function getShuffledCollection () {
+  return _.shuffle(getCollection());
 }
-export function getCollection (appendToStarter) {
+export function getCollection () {
   const userPhrases = thinStore.get('custom_dict_v1') || [];
-  if (!appendToStarter && userPhrases.length) {
+  if (userPhrases.length) {
     return userPhrases;
   }
   return ComprehensivePhraseCollection.concat(userPhrases);
@@ -102,7 +102,7 @@ export class GamePlayComponent extends React.PureComponent {
   }
 
   get phraseCatalog () {
-    return getShuffledCollection(this.appendToSeed) || [];
+    return getShuffledCollection() || [];
   }
 
   get unsolved () {
@@ -111,14 +111,6 @@ export class GamePlayComponent extends React.PureComponent {
 
   get nsfwFlag () {
     return thinStore.get('nsfw_v1') || false;
-  }
-
-  set appendToSeed (value) {
-    return thinStore.set('append_to_starter_v1', !!value);
-  }
-
-  get appendToSeed () {
-    return thinStore.get('append_to_starter_v1') || false;
   }
 
   static get propTypes () {
@@ -133,17 +125,6 @@ export class GamePlayComponent extends React.PureComponent {
     };
   }
 
-  // componentDidMount () {
-  //   if (this.props.acronym) {
-  //     console.log('props.acronym', this.props.acronym);
-  //     const phrase = this.phraseCatalog.find(item => {
-  //       if (pickCorrectAcronym(item) === this.props.acronym) {
-  //         return true;
-  //       }
-  //     });
-  //   }
-  // }
-
   componentDidUpdate () {
     const phrase = pickUrlOrStorage(this.props.acronym, this.unsolved);
     const nextUp = thinStore.get('nextUp_v1');
@@ -153,16 +134,9 @@ export class GamePlayComponent extends React.PureComponent {
   }
 
   render () {
-    // if(!this.state.phrase) return el('div', {}, 'No Phrase');
     return (
       el(React.Fragment, {},
         el(UserPreferencesComponent, {
-          appendToStarter: this.appendToSeed,
-          onAppendToggleChange: (isAppendToStarter) => {
-            this.appendToSeed = isAppendToStarter;
-            thinStore.del('nextUp_v1');
-            thinStore.set('append_to_starter_v1', isAppendToStarter);
-          },
           onChange: (evt, isNSFW) => {
             thinStore.set('nsfw_v1', isNSFW);
             // this is probably useful to force a re-render
