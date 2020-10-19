@@ -41,6 +41,10 @@ Sharing a Gist to be imported by using the `url` query parameter. Example:
 ```
 
 
+#### Testing Reference Docs
+
+This project uses @testing-library/react. It is advisable to [read this guide](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library)
+
 #### Opportunities to Improve
 
 1. Shareable Jargon acronyms. If a user visits a Uniform Resource Locator (URL), which is not present

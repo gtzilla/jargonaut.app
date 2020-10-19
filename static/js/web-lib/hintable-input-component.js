@@ -169,9 +169,11 @@ export class HintableInputComponent extends React.PureComponent {
         },
         el('input', {
           type: 'text',
+          role: 'textbox',
           style: styleParams,
           ref: el => { this.activeElement = el; },
           autoComplete: 'off',
+          'aria-label': 'jargon input',
           value: this.state.userTyped,
           onKeyUp: this.handleKeyUp.bind(this),
           onKeyDown: this.handleKeyDown.bind(this),

@@ -8,14 +8,20 @@
   "private": true,
   "scripts": {
     "lint": "eslint --fix static/js/*/*.js",
+    "lint-tests": "eslint --fix __tests__/*/*.js",
+    "test": "node --experimental-modules --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --config=./jest.config.js",
     "start": "docker-compose -f docker-compose.yaml up"
   },
+  "type": "module",
+  "engines": {
+    "node": ">=14.5.0"
+  },
   "dependencies": {
-    "commander": "^5.0.0",
     "eslint": "^7.11.0",
     "eslint-config-semistandard": "^15.0.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest-dom": "^3.2.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.21.4",
@@ -29,8 +35,15 @@
     "underscore": "^1.9.2",
     "web-router.js": "^2.1.1"
   },
+  "peerDependencies": {
+    "react": "^16.13.0"
+  },
   "devDependencies": {
-    "jest": "^26.0.1",
-    "react-testing-library": "^8.0.1"
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.8",
+    "eslint-plugin-testing-library": "^3.9.2",
+    "jest": "^26.5.2",
+    "jest-environment-jsdom-sixteen": "^1.0.3"
   }
 }

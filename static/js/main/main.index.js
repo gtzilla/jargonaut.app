@@ -1,20 +1,17 @@
 'use strict';
 
 import { WebRouter } from '../../../node-static/web-router.js/dist/web-router.js?r=1';
-// import { WebRouter } from '../../../node-static/web-router.js/src/index.js';
 import { AddJargonComponent } from '../web-lib/add-jargon-component.js';
 import { GlossaryPageComponent } from '../web-lib/glossary-page-component.js';
 import { ThinStorage } from '../web-lib/thin-storage.js';
 import { PrivacyPolicyComponent } from '../web-lib/privacy-policy-component.js';
-import { UserPreferencesComponent } from '../web-lib/user-preferences-component.js';
 import { StructureComponent } from '../web-lib/structure-component.js';
-import { ExportJargonComponent } from '../web-lib/export-jargon-component.js';
 import { unsolvedPhrases } from '../web-lib/glossary-list-component.js';
+import { ExportLibraryDisplayComponent } from '../web-lib/export-library-display-component.js';
 import {
   getCollection,
   nsfwFilter,
   GamePlayComponent,
-  getShuffledCollection,
   resetStoredInfo
 } from '../web-lib/game-play-component.js';
 
@@ -110,36 +107,36 @@ function jargonautDisplayPage (params) {
     document.getElementById('container-v2'));
 }
 
-export function ExportLibraryDisplayComponent (props) {
-  const isAppendToStarter = thinStore.get('append_to_starter_v1') || false;
-  const _phraseCollection = getShuffledCollection(isAppendToStarter);
-  const [phrases, setPhrases] = React.useState(_phraseCollection);
-  const [appendToStarter, setAppendToStarter] = React.useState(isAppendToStarter);
-  return (
-    el(React.Fragment, {},
-      el(UserPreferencesComponent, {
-        appendToStarter,
-        onChange: () => {},
-        onLibraryAdded: () => {
-          thinStore.del('nextUp_v1');
-          thinStore.del('skipped_v1');
-        },
-        onAppendToggleChange: (isAppendToStarter) => {
-          const phraseCollection = getShuffledCollection(isAppendToStarter);
-          setAppendToStarter(isAppendToStarter);
-          setPhrases(phraseCollection);
-          thinStore.del('nextUp_v1');
-          thinStore.set('append_to_starter_v1', isAppendToStarter);
-        }
-      }),
-      el(StructureComponent, { router: props.router },
-        el(ExportJargonComponent, {
-          itemsLength: phrases.length,
-          appendToStarter,
-          exportData: phrases
-        })))
-  );
-}
+// export function ExportLibraryDisplayComponent (props) {
+//   const isAppendToStarter = thinStore.get('append_to_starter_v1') || false;
+//   const _phraseCollection = getShuffledCollection(isAppendToStarter);
+//   const [phrases, setPhrases] = React.useState(_phraseCollection);
+//   const [appendToStarter, setAppendToStarter] = React.useState(isAppendToStarter);
+//   return (
+//     el(React.Fragment, {},
+//       el(UserPreferencesComponent, {
+//         appendToStarter,
+//         onChange: () => {},
+//         onLibraryAdded: () => {
+//           thinStore.del('nextUp_v1');
+//           thinStore.del('skipped_v1');
+//         },
+//         onAppendToggleChange: (isAppendToStarter) => {
+//           const phraseCollection = getShuffledCollection(isAppendToStarter);
+//           setAppendToStarter(isAppendToStarter);
+//           setPhrases(phraseCollection);
+//           thinStore.del('nextUp_v1');
+//           thinStore.set('append_to_starter_v1', isAppendToStarter);
+//         }
+//       }),
+//       el(StructureComponent, { router: props.router },
+//         el(ExportJargonComponent, {
+//           itemsLength: phrases.length,
+//           appendToStarter,
+//           exportData: phrases
+//         })))
+//   );
+// }
 
 function exportJargonDisplayPage () {
   ReactDOM.render(

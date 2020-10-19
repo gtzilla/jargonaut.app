@@ -4,8 +4,8 @@ import { UserPreferencesComponent } from './user-preferences-component.js';
 import { GameLettersComponent, deriveAcronymFromPhrase } from './game-letters-component.js';
 import { ComprehensivePhraseCollection } from '../phrases/phrases-list.js';
 import { ThinStorage } from './thin-storage.js';
-import { StructureComponent } from '../web-lib/structure-component.js';
-import { GlossaryListComponent } from '../web-lib/glossary-list-component.js';
+import { StructureComponent } from './structure-component.js';
+import { GlossaryListComponent } from './glossary-list-component.js';
 
 const thinStore = new ThinStorage();
 const el = React.createElement.bind(React);
@@ -77,15 +77,14 @@ export class GamePlayComponent extends React.PureComponent {
   constructor (props) {
     super(props);
     let phrase;
-
-    const outcome = pickUrlOrStorage(props.acronym, this.unsolved);
+    const unsolved = this.unsolved;
+    const outcome = pickUrlOrStorage(props.acronym, unsolved);
     if (outcome) {
       phrase = outcome;
     }
-
     const nextUp = thinStore.get('nextUp_v1');
     if (!phrase) {
-      this.props.onNavigate('/acronym/' + pickCorrectAcronym(nextUp || this.unsolved[0]));
+      this.props.onNavigate('/acronym/' + pickCorrectAcronym(nextUp || unsolved[0]));
     }
   }
 

@@ -14,7 +14,7 @@ import {
 
 const el = React.createElement.bind(React);
 
-class GameLettersComponent extends React.Component {
+export class GameLettersComponent extends React.Component {
   constructor (props) {
     super(props);
     if (!props.allPhrases) {
@@ -61,6 +61,8 @@ class GameLettersComponent extends React.Component {
   static get defaultProps () {
     return {
       acronym: null,
+      userTyped: '',
+      allPhrases: [],
       onAnswerWrong: () => {},
       onUpdated: () => {}
     };
@@ -184,7 +186,7 @@ class GameLettersComponent extends React.Component {
   }
 }
 
-export {
-  GameLettersComponent,
-  deriveAcronymFromPhrase
-};
+// export {
+//   GameLettersComponent,
+//   deriveAcronymFromPhrase
+// };
