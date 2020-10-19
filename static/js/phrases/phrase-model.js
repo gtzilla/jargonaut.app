@@ -1,6 +1,6 @@
 'use strict';
 
-import { deriveAcronymFromPhrase } from './hintable-input-component.js';
+import { deriveAcronymFromPhrase } from '../web-lib/hintable-input-component.js';
 export function PhraseModel (phrase, acronym, rating = 'g') {
   const derived = deriveAcronymFromPhrase(phrase);
   let type = 'pure';

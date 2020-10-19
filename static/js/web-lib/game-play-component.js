@@ -1,7 +1,8 @@
 'use strict';
 
 import { UserPreferencesComponent } from './user-preferences-component.js';
-import { GameLettersComponent, deriveAcronymFromPhrase } from './game-letters-component.js';
+import { GameLettersComponent } from './game-letters-component.js';
+import { deriveAcronymFromPhrase } from './hintable-input-component.js';
 import { ComprehensivePhraseCollection } from '../phrases/phrases-list.js';
 import { ThinStorage } from './thin-storage.js';
 import { StructureComponent } from './structure-component.js';
