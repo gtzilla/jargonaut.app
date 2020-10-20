@@ -1,6 +1,6 @@
 'use strict';
 
-import { deriveAcronymFromPhrase } from '../web-lib/hintable-input-component.js';
+import { deriveAcronymFromPhrase } from './hintable-input-component.js';
 
 const el = React.createElement.bind(React);
 

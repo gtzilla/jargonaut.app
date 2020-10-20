@@ -36,7 +36,9 @@ export class StructureComponent extends React.PureComponent {
           router: this.props.router,
           host: '/'
         }),
-        el('h1', {},
+        el('h1', {
+          'role':'banner'
+        },
           el('a', {
             title: 'Jargonaut',
             href: '/'

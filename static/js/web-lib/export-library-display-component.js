@@ -1,9 +1,9 @@
 'use strict';
 
-import { ThinStorage } from '../web-lib/thin-storage.js';
-import { StructureComponent } from '../web-lib/structure-component.js';
-import { UserPreferencesComponent } from '../web-lib/user-preferences-component.js';
-import { ExportJargonComponent } from '../web-lib/export-jargon-component.js';
+import { ThinStorage } from './thin-storage.js';
+import { StructureComponent } from './structure-component.js';
+import { UserPreferencesComponent } from './user-preferences-component.js';
+import { ExportJargonComponent } from './export-jargon-component.js';
 import {
   getShuffledCollection
 } from '../web-lib/game-play-component.js';

@@ -1,11 +1,11 @@
 
-const Ratings = [
+export const Ratings = [
   'g',
   'ma',
   'nsfw'
 ];
 
-const ComprehensivePhraseCollection = [{
+export const ComprehensivePhraseCollection = [{
   phrase: 'Laughing my ass off',
   rating: 'ma',
   type: 'pure'
@@ -125,7 +125,3 @@ const ComprehensivePhraseCollection = [{
   type: 'pure'
 }];
 
-export {
-  ComprehensivePhraseCollection,
-  Ratings
-};

@@ -92,7 +92,6 @@ function privacyPolicyDisplayPage () {
 
 function jargonautDisplayPage (params) {
   const { acronym, jargonType } = params;
-  // console.log("jargonautDisplayPage()", acronym)
   ReactDOM.render(
     el(GamePlayComponent, {
       router,
