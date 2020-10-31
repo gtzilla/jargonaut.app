@@ -1,5 +1,7 @@
 # Jargonaut.app
 
+https://jargonaut.app/
+
 Jargonaut.app -> The personal Jargon glossary. Start with our shared Internet Jargon glossary. Add your own, private, Jargon. Jargon is stored locally.
 This is a Github Single Page Application. It relies on naming the primary file `index.html` The deploy script duplicates `index.html` to `404.html` so that Github will serve this for any not found URL. Any found URLs are returned. The found URLs are static/ and node-static/
 
