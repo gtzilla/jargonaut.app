@@ -6406,10 +6406,10 @@ walker@^1.0.7, walker@~1.0.5:
   dependencies:
     makeerror "1.0.x"
 
-web-router.js@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/web-router.js/-/web-router.js-3.1.1.tgz#350c4b72eefaccbd5ad0c508d4b918a8cfdef39a"
-  integrity sha512-/PUTutCA51iIMzM47VFSflpjRXiFVSGtOCrcHmWfOm8byQD+hvo/St28QXx2E5ztJEw4vq8M/fqMe0uppwxxSw==
+web-router.js@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/web-router.js/-/web-router.js-3.1.2.tgz#7ee42ff696943b940b9d16a1a3b5e858b9724f5e"
+  integrity sha512-9A/sb1SYctHhu5ZWhUK+ACzmKwfSbzJ+dpHrHplZTywzHizi6S+ivcke2KkSPfwC8BnZLgSlIN5ZXKLOuP8gCQ==
   dependencies:
     lodash "^4.17.20"
 
