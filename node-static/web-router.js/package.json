@@ -1,0 +1,43 @@
+{
+  "name": "web-router.js",
+  "version": "3.1.2",
+  "description": "A modern vanilla web router, inspired by Navigo, testing with Jest & JSDOM",
+  "main": "dist/web-router.js",
+  "source": "src/index.js",
+  "module": "dist/web-router.js",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^10.4.4",
+    "eslint": "^7.9.0",
+    "eslint-config-semistandard": "^15.0.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react-hooks": "^4.0.6",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^26.5.2",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
+    "microbundle": "^0.12.4",
+    "semistandard": "^14.2.3",
+    "underscore": "^1.10.2"
+  },
+  "scripts": {
+    "build": "microbundle",
+    "lint": "eslint --fix",
+    "test": "node --experimental-modules --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --config=./jest.config.js",
+    "test-watch": "yarn test --watch",
+    "lint-tests": "eslint --fix __tests__/src/*.js",
+    "prepare": "yarn lint && yarn test && yarn build"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=14.5.0"
+  },
+  "repository": "git@github.com:gtzilla/web-router.js.git",
+  "author": "gtzilla <gregory.tomlinson@gmail.com>",
+  "private": false
+}
