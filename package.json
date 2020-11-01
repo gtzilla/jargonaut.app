@@ -33,7 +33,7 @@
     "stylelint": "^13.3.0",
     "stylelint-config-standard": "^20.0.0",
     "underscore": "^1.9.2",
-    "web-router.js": "^3.0.1"
+    "web-router.js": "^3.1.1"
   },
   "peerDependencies": {
     "react": "^16.13.0"
