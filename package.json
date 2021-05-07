@@ -32,7 +32,7 @@
     "semistandard": "^14.2.0",
     "stylelint": "^13.3.0",
     "stylelint-config-standard": "^20.0.0",
-    "underscore": "^1.9.2",
+    "underscore": "^1.12.1",
     "web-router.js": "^3.1.2"
   },
   "peerDependencies": {
